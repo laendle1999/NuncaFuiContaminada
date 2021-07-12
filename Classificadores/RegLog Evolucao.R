@@ -232,16 +232,20 @@ test_cl1$PCR_RESUL = as.factor(test_cl1$PCR_RESUL)
 test_cl1$CLASSI_FIN = as.factor(test_cl1$CLASSI_FIN)
 test_cl1$EVOLUCAO = as.factor(test_cl1$EVOLUCAO)
 
+#Evol - Class - Evol_new
+#1    - Cura  - 1
+#2    - Óbito - 0
 
 train_cl1$EVOL_new = ifelse(train_cl1$EVOLUCAO == "1", 1 , 0 )
 test_cl1$EVOL_new = ifelse(test_cl1$EVOLUCAO == "1", 1 , 0 )
+
 
 train_cl1 = subset(train_cl1, select = c(-EVOLUCAO, -NU_IDADE_N, -DIAS_SINTOMAS,
                                          -DIAS_SINTOMAS_A_INTERNAR, 
                                          -DIAS_INTERNACAO, -HOSPITAL, -X))
 test_cl1 = subset(test_cl1, select = c(-EVOLUCAO, -NU_IDADE_N, -DIAS_SINTOMAS, 
                                        -DIAS_SINTOMAS_A_INTERNAR, 
-                                       -DIAS_INTERNACAO, -HOSPITAL, -X))
+                                       -DIAS_INTERNACAO, -HOSPITAL, -X ))
 
 
 summary(train_cl1)
@@ -255,26 +259,60 @@ library(ROCR)
 sapply(train_cl1, function(x) sum(is.na(x)))
 
 #tentatica de melhorar o modelo
-#remover gestaçao baixo valor de pvalue (CS_GESTANT, VOMITO, PUERPERA, 
-#CARDIOPATI) E com 
+#remover items conforme execução de stepwise backward (VOMITO - AIC: 
+#444685,1, PUERPERA - AIC: 444686, 
+#CARDIOPATI - AIC: 44688,3) E com 
 #alta multicolineariedade (DIAS_INTERNACAOcat,  DIAS_SINTOMAScat  )
 
-train_cl1 = subset(train_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA, 
-                                         -CARDIOPATI ,
-                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat  
-                                         ))
-test_cl1 = subset(test_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
-                                       -CARDIOPATI ,
-                                       -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat  
-))
+# train_cl1 = subset(train_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
+#                                          -CARDIOPATI ,
+#                                         -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
+#                                          ))
+# test_cl1 = subset(test_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
+#                                        -CARDIOPATI ,
+#                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
+# ))
+
+ train_cl1 = subset(train_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO,
+                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
+ test_cl1 = subset(test_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO,
+                                      -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
 
 #####Evolução
+
+#https://smolski.github.io/livroavancado/reglog.html
+#https://estatsite.com.br/2018/08/26/regressao-logistica-no-r/
 
 modelo = glm(EVOL_new ~., data = train_cl1, family = binomial)
 
 summary(modelo)
 
-summary(modelo)$coefficients
+odd.ratio = exp(coef(modelo))
+print(odd.ratio)
+
+print("Percentual de importancia comparativa para cura entre fatores")
+(odd.ratio - 1) * 100
+
+coef(modelo)
+
+#step = step(modelo, direction = "backward")
+
+#caluclo da razão das chances
+#library(mfx)
+
+#odds = logitor(EVOL_new ~., data = train_cl1)
+
+#odd1 = as.data.frame(odds$oddsratio)
+
+#odd1$prop = (odd1$OddsRatio-1)*100
+
+#exp(cbind(OR=coef(modelo), confint(modelo)))
+
+#a = c(rownames(odd1))
+
+
+#anova(modelo)
+
 
 #Calculo do McFadden R2 (valores acima de 0.4 
 #indicam que o modelo fit bem)
@@ -287,12 +325,9 @@ caret::varImp(modelo)
 #valores de colineariedade - acima de 5 grande colinearidade 
 car::vif(modelo)
 
-
-odd.ratio = exp(coef(modelo))
-
 pred.Teste = predict(modelo, test_cl1, type = "response")
-Teste_v2 = cbind(test_cl1, pred.Teste)
 
+Teste_v2 = cbind(test_cl1, pred.Teste)
 
 pred.val = prediction(pred.Teste, Teste_v2$EVOL_new)
 
@@ -310,8 +345,20 @@ ks <- max(attr(performance, "y.values")[[1]] -
             (attr(performance, "x.values")[[1]]))
 ks
 
-table(test_cl1$EVOL_new, pred.Teste >0.5)
+test_cl1$predito = ifelse(pred.Teste > 0.5, 1 , 0)
 
+test_cl1$predito = as.factor(test_cl1$predito)
+test_cl1$EVOL_new = as.factor(test_cl1$EVOL_new)
+
+table(test_cl1$EVOL_new, test_cl1$predito)
+
+
+#pred.Teste
+#test_cl1$EVOL_new
+
+require(caret)
+
+caret::confusionMatrix(test_cl1$EVOL_new, test_cl1$predito, positive = "1")
 
 
 #calculos do cutoff
