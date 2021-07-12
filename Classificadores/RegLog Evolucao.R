@@ -256,7 +256,7 @@ summary(train_cl1)
 library(kernlab)
 library(ROCR)
 
-sapply(train_cl1, function(x) sum(is.na(x)))
+#sapply(train_cl1, function(x) sum(is.na(x)))
 
 #tentatica de melhorar o modelo
 #remover items conforme execução de stepwise backward (VOMITO - AIC: 
@@ -282,6 +282,7 @@ sapply(train_cl1, function(x) sum(is.na(x)))
 
 #https://smolski.github.io/livroavancado/reglog.html
 #https://estatsite.com.br/2018/08/26/regressao-logistica-no-r/
+#https://www.edureka.co/blog/logistic-regression-in-r/
 
 modelo = glm(EVOL_new ~., data = train_cl1, family = binomial)
 
@@ -293,7 +294,7 @@ print(odd.ratio)
 print("Percentual de importancia comparativa para cura entre fatores")
 (odd.ratio - 1) * 100
 
-coef(modelo)
+#coef(modelo)
 
 #step = step(modelo, direction = "backward")
 
@@ -320,7 +321,8 @@ coef(modelo)
 pscl::pR2(modelo)["McFadden"]
 
 #Importancia das variaveis 
-caret::varImp(modelo)
+X = caret::varImp(modelo)
+print(X)
 
 #valores de colineariedade - acima de 5 grande colinearidade 
 car::vif(modelo)
@@ -390,3 +392,15 @@ specificity(test_cl1$EVOL_new, pred.Teste)
 #calculate total misclassification error rate - Incorrect classification
 misClassError(test_cl1$EVOL_new, pred.Teste, threshold=optimal)
 
+V = varImp(modelo)
+
+a = ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
+  geom_point( color="blue", size=4, alpha=0.6)+
+  geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
+                color='skyblue') +
+  xlab('Variable')+
+  ylab('Overall Importance')+
+  theme_light() +
+  coord_flip() 
+
+a

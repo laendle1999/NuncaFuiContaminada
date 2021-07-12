@@ -256,12 +256,12 @@ summary(train_cl1)
 library(kernlab)
 library(ROCR)
 
-sapply(train_cl1, function(x) sum(is.na(x)))
+#sapply(train_cl1, function(x) sum(is.na(x)))
 
 #tentatica de melhorar o modelo
-#remover items conforme execução de stepwise backward (VOMITO - AIC: 
-#444685,1, PUERPERA - AIC: 444686, 
-#CARDIOPATI - AIC: 44688,3) E com 
+#remover items conforme execução de stepwise backward (INICIAL: 470887,4,
+#DESC_RESP - AIC: 470885,4, NEUROLOGIC  - AIC: 470884,4,  
+#ASMA - AIC: 470883,4) E com 
 #alta multicolineariedade (DIAS_INTERNACAOcat,  DIAS_SINTOMAScat  )
 
 # train_cl1 = subset(train_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
@@ -273,8 +273,10 @@ sapply(train_cl1, function(x) sum(is.na(x)))
 #                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
 # ))
 
-train_cl1 = subset(train_cl1, select = c(-DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
-test_cl1 = subset(test_cl1, select = c(-DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
+train_cl1 = subset(train_cl1, select = c(-DESC_RESP, -NEUROLOGIC, -ASMA, 
+                                         -DIAS_INTERNACAOcat,-DIAS_SINTOMAScat))
+test_cl1 = subset(test_cl1, select = c(-DESC_RESP, -NEUROLOGIC, -ASMA, 
+                                       -DIAS_INTERNACAOcat,-DIAS_SINTOMAScat))
 
 #####Evolução
 
@@ -292,9 +294,10 @@ print(odd.ratio)
 print("Percentual de importancia comparativa para cura entre fatores")
 (odd.ratio - 1) * 100
 
-coef(modelo)
+#coef(modelo)
 
-step = step(modelo, direction = "backward")
+#avaliação stepwise
+#step = step(modelo, direction = "backward")
 
 #caluclo da razão das chances
 #library(mfx)
@@ -319,7 +322,7 @@ step = step(modelo, direction = "backward")
 pscl::pR2(modelo)["McFadden"]
 
 #Importancia das variaveis 
-X = caret::varImp(modelo)
+X = varImp(modelo)
 print(X)
 
 #valores de colineariedade - acima de 5 grande colinearidade 
@@ -389,4 +392,17 @@ specificity(test_cl1$EVOL_new, pred.Teste)
 
 #calculate total misclassification error rate - Incorrect classification
 misClassError(test_cl1$EVOL_new, pred.Teste, threshold=optimal)
+
+V = varImp(modelo)
+
+a = ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
+  geom_point( color="blue", size=4, alpha=0.6)+
+  geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
+                color='skyblue') +
+  xlab('Variable')+
+  ylab('Overall Importance')+
+  theme_light() +
+  coord_flip() 
+
+a
 
