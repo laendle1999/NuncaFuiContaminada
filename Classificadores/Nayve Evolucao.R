@@ -34,7 +34,7 @@ test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 80] = "E"
 test_cl1$NU_IDADE_Ncat = as.factor(test_cl1$NU_IDADE_Ncat)
 summary(test_cl1[,c('NU_IDADE_Ncat')])
 
-hist(train_cl1$DIAS_INTERNACAO)
+#hist(train_cl1$DIAS_INTERNACAO)
 #DIAS_INTERNACAOcat
 train_cl1$DIAS_INTERNACAOcat = rep("A", nrow(train_cl1))
 train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 3] = "B"
@@ -183,36 +183,64 @@ test_cl1$PCR_RESUL = as.factor(test_cl1$PCR_RESUL)
 test_cl1$CLASSI_FIN = as.factor(test_cl1$CLASSI_FIN)
 test_cl1$EVOLUCAO = as.factor(test_cl1$EVOLUCAO)
 
+#Evol - Class - Evol_new
+#1    - Cura  - 1
+#2    - Óbito - 0
 
-#train_cl1$EVOL_new = ifelse(train_cl1$EVOLUCAO == "1", 1 , 0 )
-#test_cl1$EVOL_new = ifelse(test_cl1$EVOLUCAO == "1", 1 , 0 )
+
+train_cl1$EVOL_new = as.factor(ifelse(train_cl1$EVOLUCAO == "1", 1 , 0 ))
+test_cl1$EVOL_new = as.factor(ifelse(test_cl1$EVOLUCAO == "1", 1 , 0 ))
+
 
 train_cl1 = subset(train_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
                                           -DIAS_SINTOMAS_A_INTERNAR, 
-                                          -DIAS_INTERNACAO, -HOSPITAL, -X))
+                                        -DIAS_INTERNACAO, -HOSPITAL, -EVOLUCAO,
+                                          -X))
 test_cl1 = subset(test_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
                                         -DIAS_SINTOMAS_A_INTERNAR, 
-                                        -DIAS_INTERNACAO, -HOSPITAL, -X))
+                                        -DIAS_INTERNACAO, -HOSPITAL, -EVOLUCAO 
+                                        , -X))
 
 # Fitting Naive Bayes Model 
 # to training dataset
 set.seed(120)  # Setting Seed
-classifier_cl1 <- naiveBayes(EVOLUCAO ~ ., data = train_cl1, laplace = 1)
+classifier_cl1 <- naiveBayes(EVOL_new ~ ., data = train_cl1, laplace = 1)
+
+library(ROCR)
+
+#classifier_cl1 = train(EVOL_new ~ ., data = train_cl1, method = "nb")
+
 classifier_cl1
 
 # Predicting on test data'
-y_pred1 <- predict(classifier_cl1, newdata = test_cl1)
+y_pred1 <- predict(classifier_cl1, newdata = test_cl1, positive = "1")
+
+y_pred = prediction(as.numeric(y_pred1), as.numeric(test_cl1$EVOL_new))
 
 # Confusion Matrix
-cm1 <- table(test_cl1$EVOLUCAO, y_pred1)
+cm1 <- table(test_cl1$EVOL_new, y_pred1)
 #cm1
 
 # Model Evauation
-confusionMatrix(cm1)
+caret::confusionMatrix(cm1, positive = "1")
 
 #Precisão para Evolução
-precision(test_cl1$EVOLUCAO, y_pred1)
+caret::precision(test_cl1$EVOL_new, y_pred1)
 
+library(ROCR)
+
+# calculo da auc (area under the curve)
+auc = performance(y_pred,"auc")
+unlist(auc@y.values)
+
+performance = performance(y_pred, "tpr", "fpr")
+plot(performance, col = "blue", lwd = 5)
+abline(a=0, b=1, lwd =2, lty = 2)
+
+#MODEL DIAGNOSTICS
+library(InformationValue)
+
+misClassError(as.numeric(test_cl1$EVOL_new), as.numeric(y_pred1))
 
 
 

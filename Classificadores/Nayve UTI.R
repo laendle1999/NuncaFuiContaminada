@@ -8,7 +8,7 @@ library(data.table)
 #limpar ambiente
 rm(list=ls())
 
-print("Regressão logistica - UTI")
+print("Naive Bayes - UTI")
 
 ###### Leitura da base direta no CSV
 
@@ -24,9 +24,7 @@ train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 40] = "C"
 train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 60] = "D"
 train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 80] = "E"
 train_cl1$NU_IDADE_Ncat = as.factor(train_cl1$NU_IDADE_Ncat)
-#train_cl1$NU_IDADE_N = as.factor(train_cl1$NU_IDADE_N)
 summary(train_cl1[,c('NU_IDADE_Ncat')])
-#summary(train_cl1[,c('NU_IDADE_N')])
 
 test_cl1$NU_IDADE_Ncat = rep("A", nrow(test_cl1))
 test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 20] = "B"
@@ -34,11 +32,9 @@ test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 40] = "C"
 test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 60] = "D"
 test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 80] = "E"
 test_cl1$NU_IDADE_Ncat = as.factor(test_cl1$NU_IDADE_Ncat)
-#test_cl1$NU_IDADE_N = as.factor(test_cl1$NU_IDADE_N)
 summary(test_cl1[,c('NU_IDADE_Ncat')])
-#summary(test_cl1[,c('NU_IDADE_N')])
 
-hist(train_cl1$DIAS_INTERNACAO)
+#hist(train_cl1$DIAS_INTERNACAO)
 #DIAS_INTERNACAOcat
 train_cl1$DIAS_INTERNACAOcat = rep("A", nrow(train_cl1))
 train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 3] = "B"
@@ -54,7 +50,9 @@ test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 6] = "C"
 test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 9] = "D"
 test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 12] = "E"
 test_cl1$DIAS_INTERNACAOcat = as.factor(test_cl1$DIAS_INTERNACAOcat)
+#test_cl1$DIAS_INTERNACAO = as.factor(test_cl1$DIAS_INTERNACAO)
 summary(test_cl1[,c('DIAS_INTERNACAOcat')])
+#summary(test_cl1[,c('DIAS_INTERNACAO')])
 
 summary(train_cl1$DIAS_SINTOMAS_A_INTERNAR)
 #DIAS_SINTOMAS_A_INTERNARcat
@@ -67,7 +65,7 @@ train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR
                                       > 9] = "D"
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
                                       > 12] = "E"
-train_cl1$DIAS_SINTOMAS_A_INTERNARcat = 
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat =  
   as.factor(train_cl1$DIAS_SINTOMAS_A_INTERNARcat)
 summary(train_cl1[,c('DIAS_SINTOMAS_A_INTERNARcat')])
 
@@ -75,9 +73,9 @@ test_cl1$DIAS_SINTOMAS_A_INTERNARcat = rep("A", nrow(test_cl1))
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
                                      > 3] = "B"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 6] = "C"
+                                     > 6]= "C"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 9] = "D"
+                                     > 9]= "D"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
                                      > 12] = "E"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat = 
@@ -131,7 +129,7 @@ train_cl1$SIND_DOWN = as.factor(train_cl1$SIND_DOWN)
 train_cl1$HEPATICA = as.factor(train_cl1$HEPATICA)
 train_cl1$ASMA = as.factor(train_cl1$ASMA)
 train_cl1$DIABETES = as.factor(train_cl1$DIABETES)
-train_cl1$NEUROLOGIC = as.factor(train_cl1$NEUROLOGIC) 
+train_cl1$NEUROLOGIC = as.factor(train_cl1$NEUROLOGIC)
 train_cl1$PNEUMOPATI = as.factor(train_cl1$PNEUMOPATI)
 train_cl1$IMUNODEPRE = as.factor(train_cl1$IMUNODEPRE)
 train_cl1$RENAL = as.factor(train_cl1$RENAL)
@@ -185,30 +183,64 @@ test_cl1$PCR_RESUL = as.factor(test_cl1$PCR_RESUL)
 test_cl1$CLASSI_FIN = as.factor(test_cl1$CLASSI_FIN)
 test_cl1$EVOLUCAO = as.factor(test_cl1$EVOLUCAO)
 
+#UTI - Class - Evol_new
+#1    - Sim  - 1
+#2    - Não - 0
+
+
+train_cl1$EVOL_new = as.factor(ifelse(train_cl1$UTI == "1", 1 , 0 ))
+test_cl1$EVOL_new = as.factor(ifelse(test_cl1$UTI == "1", 1 , 0 ))
+
 
 train_cl1 = subset(train_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
                                           -DIAS_SINTOMAS_A_INTERNAR, 
-                                          -DIAS_INTERNACAO, -HOSPITAL, -X))
+                                          -DIAS_INTERNACAO, -HOSPITAL, -UTI,
+                                          -X))
 test_cl1 = subset(test_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
                                         -DIAS_SINTOMAS_A_INTERNAR, 
-                                        -DIAS_INTERNACAO, -HOSPITAL, -X))
+                                        -DIAS_INTERNACAO, -HOSPITAL, -UTI 
+                                        , -X))
 
 # Fitting Naive Bayes Model 
 # to training dataset
 set.seed(120)  # Setting Seed
-classifier_cl1 <- naiveBayes(UTI ~ ., data = train_cl1, laplace = 1)
+classifier_cl1 <- naiveBayes(EVOL_new ~ ., data = train_cl1, laplace = 1)
+
+library(ROCR)
+
+#classifier_cl1 = train(EVOL_new ~ ., data = train_cl1, method = "nb")
+
 classifier_cl1
 
 # Predicting on test data'
-y_pred1 <- predict(classifier_cl1, newdata = test_cl1)
+y_pred1 <- predict(classifier_cl1, newdata = test_cl1, positive = "1")
+
+y_pred = prediction(as.numeric(y_pred1), as.numeric(test_cl1$EVOL_new))
 
 # Confusion Matrix
-cm1 <- table(test_cl1$UTI, y_pred1)
+cm1 <- table(test_cl1$EVOL_new, y_pred1)
 #cm1
 
 # Model Evauation
-confusionMatrix(cm1)
+caret::confusionMatrix(cm1, positive = "1")
 
 #Precisão para Evolução
-precision(test_cl1$UTI, y_pred1)
+caret::precision(test_cl1$EVOL_new, y_pred1)
+
+library(ROCR)
+
+# calculo da auc (area under the curve)
+auc = performance(y_pred,"auc")
+unlist(auc@y.values)
+
+performance = performance(y_pred, "tpr", "fpr")
+plot(performance, col = "blue", lwd = 5)
+abline(a=0, b=1, lwd =2, lty = 2)
+
+#MODEL DIAGNOSTICS
+library(InformationValue)
+
+misClassError(as.numeric(test_cl1$EVOL_new), as.numeric(y_pred1))
+
+
 
