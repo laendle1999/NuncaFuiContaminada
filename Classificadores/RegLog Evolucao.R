@@ -13,9 +13,9 @@ rm(list=ls())
 ###### Leitura da base direta no CSV
 
 train_cl1 = 
-  read.csv("~/Área de Trabalho/covid/Novo/treino_evolucao_datas.csv", sep ="," )
+  read.csv("~/Área de Trabalho/covid/Novo/treino_evolucao1_datas.csv", sep ="," )
 test_cl1 = 
-  read.csv("~/Área de Trabalho/covid/Novo/teste_evolucao_datas.csv", sep ="," )
+  read.csv("~/Área de Trabalho/covid/Novo/teste_evolucao1_datas.csv", sep ="," )
 
 
 #Idade
@@ -127,31 +127,6 @@ test_cl1$DIAS_SINTOMAS_A_INTERNARcat =
 
 summary(test_cl1[,c('DIAS_SINTOMAS_A_INTERNARcat')])
 
-summary(train_cl1$DIAS_SINTOMAS)
-#DIAS_SINTOMAScat
-train_cl1$DIAS_SINTOMAScat = rep("A", nrow(train_cl1))
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 4] = "B"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 8] = "C"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 12] = "D"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 16] = "E"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 20] = "F"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 24] = "G"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 28] = "H"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 32] = "I"
-train_cl1$DIAS_SINTOMAScat = as.factor(train_cl1$DIAS_SINTOMAScat)
-summary(train_cl1[,c('DIAS_SINTOMAScat')])
-
-test_cl1$DIAS_SINTOMAScat = rep("A", nrow(test_cl1))
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 4] = "B"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 8] = "C"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 12] = "D"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 16] = "E"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 20] = "F"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 24] = "G"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 28] = "H"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 32] = "I"
-test_cl1$DIAS_SINTOMAScat = as.factor(test_cl1$DIAS_SINTOMAScat)
-summary(test_cl1[,c('DIAS_SINTOMAScat')])
 
 train_cl1$SG_UF_NOT = as.factor(train_cl1$SG_UF_NOT)
 train_cl1$CS_SEXO = as.factor(train_cl1$CS_SEXO)
@@ -240,10 +215,10 @@ train_cl1$EVOL_new = ifelse(train_cl1$EVOLUCAO == "1", 1 , 0 )
 test_cl1$EVOL_new = ifelse(test_cl1$EVOLUCAO == "1", 1 , 0 )
 
 
-train_cl1 = subset(train_cl1, select = c(-EVOLUCAO, -NU_IDADE_N, -DIAS_SINTOMAS,
+train_cl1 = subset(train_cl1, select = c(-EVOLUCAO, -NU_IDADE_N,
                                          -DIAS_SINTOMAS_A_INTERNAR, 
                                          -DIAS_INTERNACAO, -HOSPITAL, -X))
-test_cl1 = subset(test_cl1, select = c(-EVOLUCAO, -NU_IDADE_N, -DIAS_SINTOMAS, 
+test_cl1 = subset(test_cl1, select = c(-EVOLUCAO, -NU_IDADE_N, 
                                        -DIAS_SINTOMAS_A_INTERNAR, 
                                        -DIAS_INTERNACAO, -HOSPITAL, -X ))
 
@@ -273,10 +248,8 @@ library(ROCR)
 #                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
 # ))
 
- train_cl1 = subset(train_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO,
-                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
- test_cl1 = subset(test_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO,
-                                      -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat))
+ train_cl1 = subset(train_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO))
+ test_cl1 = subset(test_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO))
 
 #####Evolução
 

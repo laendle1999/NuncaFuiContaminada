@@ -12,43 +12,66 @@ print("Naive Bayes - UTI")
 
 ###### Leitura da base direta no CSV
 
-train_cl1 = read.csv("~/Área de Trabalho/covid/Novo/treino_UTI_datas.csv", 
+train_cl1 = read.csv("~/Área de Trabalho/covid/Novo/treino_UTI1_datas.csv", 
                      sep ="," )
-test_cl1 = read.csv("~/Área de Trabalho/covid/Novo/teste_UTI_datas.csv", 
+test_cl1 = read.csv("~/Área de Trabalho/covid/Novo/teste_UTI1_datas.csv", 
                     sep ="," )
 
 #Idade
 train_cl1$NU_IDADE_Ncat = rep("A", nrow(train_cl1))
-train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 20] = "B"
-train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 40] = "C"
-train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 60] = "D"
-train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 80] = "E"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 10] = "B"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 20] = "C"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 30] = "D"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 40] = "E"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 50] = "F"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 60] = "G"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 70] = "H"
+train_cl1$NU_IDADE_Ncat[train_cl1$NU_IDADE_N > 80] = "I"
 train_cl1$NU_IDADE_Ncat = as.factor(train_cl1$NU_IDADE_Ncat)
+#train_cl1$NU_IDADE_N = as.factor(train_cl1$NU_IDADE_N)
 summary(train_cl1[,c('NU_IDADE_Ncat')])
+#summary(train_cl1[,c('NU_IDADE_N')])
 
 test_cl1$NU_IDADE_Ncat = rep("A", nrow(test_cl1))
-test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 20] = "B"
-test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 40] = "C"
-test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 60] = "D"
-test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 80] = "E"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 10] = "B"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 20] = "C"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 30] = "D"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 40] = "E"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 50] = "F"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 60] = "G"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 70] = "H"
+test_cl1$NU_IDADE_Ncat[test_cl1$NU_IDADE_N > 80] = "I"
 test_cl1$NU_IDADE_Ncat = as.factor(test_cl1$NU_IDADE_Ncat)
+#test_cl1$NU_IDADE_N = as.factor(test_cl1$NU_IDADE_N)
 summary(test_cl1[,c('NU_IDADE_Ncat')])
+#summary(test_cl1[,c('NU_IDADE_N')])
 
-#hist(train_cl1$DIAS_INTERNACAO)
+
 #DIAS_INTERNACAOcat
 train_cl1$DIAS_INTERNACAOcat = rep("A", nrow(train_cl1))
-train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 3] = "B"
-train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 6] = "C"
-train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 9] = "D"
-train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 12] = "E"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 2] = "B"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 4] = "C"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 6] = "D"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 8] = "E"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 10] = "F"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 12] = "G"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 14] = "H"
+train_cl1$DIAS_INTERNACAOcat[train_cl1$DIAS_INTERNACAO > 16] = "I"
 train_cl1$DIAS_INTERNACAOcat = as.factor(train_cl1$DIAS_INTERNACAOcat)
+#train_cl1$DIAS_INTERNACAO = as.factor(train_cl1$DIAS_INTERNACAO)
 summary(train_cl1[,c('DIAS_INTERNACAOcat')])
+#summary(train_cl1[,c('DIAS_INTERNACAO')])
 
 test_cl1$DIAS_INTERNACAOcat = rep("A", nrow(test_cl1))
-test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 3] = "B"
-test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 6] = "C"
-test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 9] = "D"
-test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 12] = "E"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 2] = "B"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 4] = "C"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 6] = "D"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 8] = "E"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 10] = "F"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 12] = "G"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 14] = "H"
+test_cl1$DIAS_INTERNACAOcat[test_cl1$DIAS_INTERNACAO > 16] = "I"
+
 test_cl1$DIAS_INTERNACAOcat = as.factor(test_cl1$DIAS_INTERNACAOcat)
 #test_cl1$DIAS_INTERNACAO = as.factor(test_cl1$DIAS_INTERNACAO)
 summary(test_cl1[,c('DIAS_INTERNACAOcat')])
@@ -58,51 +81,50 @@ summary(train_cl1$DIAS_SINTOMAS_A_INTERNAR)
 #DIAS_SINTOMAS_A_INTERNARcat
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat = rep("A", nrow(train_cl1))
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                      > 3] = "B"
+                                      > 2] = "B"
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                      > 6] = "C"
+                                      > 4] = "C"
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                      > 9] = "D"
+                                      > 6] = "D"
 train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                      > 12] = "E"
-train_cl1$DIAS_SINTOMAS_A_INTERNARcat =  
+                                      > 8] = "E"
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                      > 10] = "F"
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                      > 12] = "G"
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                      > 14] = "H"
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat[train_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                      > 16] = "I"
+
+train_cl1$DIAS_SINTOMAS_A_INTERNARcat = 
   as.factor(train_cl1$DIAS_SINTOMAS_A_INTERNARcat)
+
 summary(train_cl1[,c('DIAS_SINTOMAS_A_INTERNARcat')])
+#summary(train_cl1[,c('DIAS_SINTOMAS_A_INTERNAR')])
 
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat = rep("A", nrow(test_cl1))
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 3] = "B"
+                                     > 2] = "B"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 6]= "C"
+                                     > 4] = "C"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 9]= "D"
+                                     > 6] = "D"
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
-                                     > 12] = "E"
+                                     > 8] = "E"
+test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                     > 10] = "F"
+test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                     > 12] = "G"
+test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                     > 14] = "H"
+test_cl1$DIAS_SINTOMAS_A_INTERNARcat[test_cl1$DIAS_SINTOMAS_A_INTERNAR 
+                                     > 16] = "I"
+
 test_cl1$DIAS_SINTOMAS_A_INTERNARcat = 
   as.factor(test_cl1$DIAS_SINTOMAS_A_INTERNARcat)
+
 summary(test_cl1[,c('DIAS_SINTOMAS_A_INTERNARcat')])
-
-summary(train_cl1$DIAS_SINTOMAS)
-#DIAS_SINTOMAScat
-train_cl1$DIAS_SINTOMAScat = rep("A", nrow(train_cl1))
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 6] = "B"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 12] = "C"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 18] = "D"
-train_cl1$DIAS_SINTOMAScat[train_cl1$DIAS_SINTOMAS > 24] = "E"
-train_cl1$DIAS_SINTOMAScat = as.factor(train_cl1$DIAS_SINTOMAScat)
-#train_cl1$DIAS_SINTOMAS = as.factor(train_cl1$DIAS_SINTOMAS)
-summary(train_cl1[,c('DIAS_SINTOMAScat')])
-#summary(train_cl1[,c('DIAS_SINTOMAS')])
-
-test_cl1$DIAS_SINTOMAScat = rep("A", nrow(test_cl1))
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 6] = "B"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 12] = "C"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 18] = "D"
-test_cl1$DIAS_SINTOMAScat[test_cl1$DIAS_SINTOMAS > 24] = "E"
-test_cl1$DIAS_SINTOMAScat = as.factor(test_cl1$DIAS_SINTOMAScat)
-#test_cl1$DIAS_SINTOMAS = as.factor(test_cl1$DIAS_SINTOMAS)
-summary(test_cl1[,c('DIAS_SINTOMAScat')])
-#summary(test_cl1[,c('DIAS_SINTOMAS')])
 
 train_cl1$SG_UF_NOT = as.factor(train_cl1$SG_UF_NOT)
 train_cl1$CS_SEXO = as.factor(train_cl1$CS_SEXO)
@@ -192,14 +214,14 @@ train_cl1$EVOL_new = as.factor(ifelse(train_cl1$UTI == "1", 1 , 0 ))
 test_cl1$EVOL_new = as.factor(ifelse(test_cl1$UTI == "1", 1 , 0 ))
 
 
-train_cl1 = subset(train_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
+train_cl1 = subset(train_cl1, select = c( -NU_IDADE_N, 
                                           -DIAS_SINTOMAS_A_INTERNAR, 
-                                          -DIAS_INTERNACAO, -HOSPITAL, -UTI,
-                                          -X))
-test_cl1 = subset(test_cl1, select = c( -NU_IDADE_N, -DIAS_SINTOMAS, 
+                                          -DIAS_INTERNACAO , 
+                                          -HOSPITAL, -X, -UTI))
+test_cl1 = subset(test_cl1, select = c( -NU_IDADE_N,  
                                         -DIAS_SINTOMAS_A_INTERNAR, 
-                                        -DIAS_INTERNACAO, -HOSPITAL, -UTI 
-                                        , -X))
+                                        -DIAS_INTERNACAO , 
+                                        -HOSPITAL, -X, -UTI ))
 
 # Fitting Naive Bayes Model 
 # to training dataset
