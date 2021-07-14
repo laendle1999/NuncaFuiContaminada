@@ -41,7 +41,7 @@ accc = function(VP,VN,FN,FP){
   print(TFP)
 }
 
-accc(1,2,3,4)
+accc(128154, 44433, 31404 , 11962 )
 
 cm1[2,1]
 
@@ -50,7 +50,7 @@ accc(cm1[1,1], cm1[2,2], cm1[1,2], cm1[2,1]  )
 
 print("Base de teste: 30%")
 accc(cm2[1,1], cm2[2,2], cm2[1,2], cm2[2,1]  )
-
+a
 
 ####Calculo curva ROC
 

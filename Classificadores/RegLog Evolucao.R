@@ -259,7 +259,7 @@ print("Percentual de importancia comparativa para cura entre fatores")
 
 #coef(modelo)
 
-step = step(modelo, direction = "backward")
+#step = step(modelo, direction = "backward")
 
 #caluclo da razão das chances
 #library(mfx)
@@ -296,6 +296,8 @@ Teste_v2 = cbind(test_cl1, pred.Teste)
 
 pred.val = prediction(pred.Teste, Teste_v2$EVOL_new)
 
+
+
 # calculo da auc (area under the curve)
 auc = performance(pred.val,"auc")
 unlist(auc@y.values)
@@ -314,6 +316,10 @@ test_cl1$predito = ifelse(pred.Teste > 0.5, 1 , 0)
 
 test_cl1$predito = as.factor(test_cl1$predito)
 test_cl1$EVOL_new = as.factor(test_cl1$EVOL_new)
+
+
+
+
 
 table(test_cl1$EVOL_new, test_cl1$predito)
 

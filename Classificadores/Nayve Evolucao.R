@@ -262,5 +262,5 @@ library(InformationValue)
 
 misClassError(as.numeric(test_cl1$EVOL_new), as.numeric(y_pred1))
 
-
+cm1
 
