@@ -234,19 +234,9 @@ library(ROCR)
 #sapply(train_cl1, function(x) sum(is.na(x)))
 
 #tentatica de melhorar o modelo
-#remover items conforme execução de stepwise backward (VOMITO - AIC: 
-#444685,1, PUERPERA - AIC: 444686, 
-#CARDIOPATI - AIC: 44688,3) E com 
-#alta multicolineariedade (DIAS_INTERNACAOcat,  DIAS_SINTOMAScat  )
-
-# train_cl1 = subset(train_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
-#                                          -CARDIOPATI ,
-#                                         -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
-#                                          ))
-# test_cl1 = subset(test_cl1, select = c(-CS_GESTANT, -VOMITO, -PUERPERA,
-#                                        -CARDIOPATI ,
-#                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
-# ))
+#remover items conforme execução de stepwise backward (INICIAL: 437897,2, 
+#CARDIOPATIA - AIC: 437896, PUERPERA - AIC: 437894,9 E 
+#VOMITO: AIC: 437893,9) - SEM PROBLEMA DE MULTICOLINEARIEDADE)
 
  train_cl1 = subset(train_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO))
  test_cl1 = subset(test_cl1, select = c(-CARDIOPATI, -PUERPERA, -VOMITO))
@@ -269,7 +259,7 @@ print("Percentual de importancia comparativa para cura entre fatores")
 
 #coef(modelo)
 
-#step = step(modelo, direction = "backward")
+step = step(modelo, direction = "backward")
 
 #caluclo da razão das chances
 #library(mfx)
