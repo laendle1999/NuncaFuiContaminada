@@ -248,8 +248,12 @@ library(ROCR)
 #                                        -DIAS_INTERNACAOcat, -DIAS_SINTOMAScat
 # ))
 
-train_cl1 = subset(train_cl1, select = c(-DESC_RESP, -NEUROLOGIC, -ASMA))
-test_cl1 = subset(test_cl1, select = c(-DESC_RESP, -NEUROLOGIC, -ASMA))
+train_cl1 = subset(train_cl1, select = c(-DESC_RESP, -HEMATOLOGI , -ASMA))
+test_cl1 = subset(test_cl1, select = c(-DESC_RESP, -HEMATOLOGI , -ASMA))
+
+
+
+
 
 #####Evolução
 
@@ -334,7 +338,7 @@ table(test_cl1$EVOL_new, test_cl1$predito)
 
 require(caret)
 
-caret::confusionMatrix(test_cl1$EVOL_new, test_cl1$predito, positive = "1")
+caret::confusionMatrix(test_cl1$EVOL_new, test_cl1$predito, positive = "0")
 
 
 #calculos do cutoff
@@ -366,8 +370,24 @@ specificity(test_cl1$EVOL_new, pred.Teste)
 #calculate total misclassification error rate - Incorrect classification
 misClassError(test_cl1$EVOL_new, pred.Teste, threshold=optimal)
 
-V = varImp(modelo)
+#V = varImp(modelo)
 
+getModelInfo("glm")$glm$varImp
+
+summary(modelo)$coef
+
+#varimpsinal - Varimp não considerado o sinal
+Vaimpsinal = function(object, ...) {
+  values <- summary(object)$coef
+  varImps <-  (values[-1, grep("value$", colnames(values)), drop = FALSE])
+  vimp <- data.frame(varImps)
+  colnames(vimp) <- "Overall"
+  if(!is.null(names(varImps))) rownames(vimp) <- names(varImps)
+  vimp
+}
+
+V = Vaimpsinal(modelo)
+V 
 a = ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
   geom_point( color="blue", size=4, alpha=0.6)+
   geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
@@ -378,4 +398,8 @@ a = ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
   coord_flip() 
 
 a
+
+
+
+
 
