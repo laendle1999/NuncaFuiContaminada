@@ -40,26 +40,26 @@ accc = function(VP,VN,FN,FP){
   print(TFP)
 }
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 accc(128154, 44433, 31404 , 11962 )
-=======
+#=======
 test = function() {
->>>>>>> 4457802efc9a2de8b61fead867861963b91e9dd5
+#>>>>>>> 4457802efc9a2de8b61fead867861963b91e9dd5
 
   cm1 = table(train_cl1$targetsTrain, prediction)
 
   accc(1,2,3,4)
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 print("Base de teste: 30%")
 accc(cm2[1,1], cm2[2,2], cm2[1,2], cm2[2,1]  )
 a
-=======
+#=======
   cm1[2,1]
 
   print("TBase de treinamento: 70%")
   accc(cm1[1,1], cm1[2,2], cm1[1,2], cm1[2,1]  )
->>>>>>> 4457802efc9a2de8b61fead867861963b91e9dd5
+#>>>>>>> 4457802efc9a2de8b61fead867861963b91e9dd5
 
   print("Base de teste: 30%")
   accc(cm2[1,1], cm2[2,2], cm2[1,2], cm2[2,1]  )

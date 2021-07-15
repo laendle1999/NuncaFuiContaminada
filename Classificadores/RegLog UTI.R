@@ -370,7 +370,8 @@ specificity(test_cl1$EVOL_new, pred.Teste)
 #calculate total misclassification error rate - Incorrect classification
 misClassError(test_cl1$EVOL_new, pred.Teste, threshold=optimal)
 
-#V = varImp(modelo)
+V1 = varImp(modelo)
+
 
 getModelInfo("glm")$glm$varImp
 

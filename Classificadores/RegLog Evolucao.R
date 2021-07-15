@@ -363,7 +363,28 @@ misClassError(test_cl1$EVOL_new, pred.Teste, threshold=optimal)
 
 V = varImp(modelo)
 
-a = ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
+V
+
+#varimpsinal - Varimp não considerado o sinal
+Vaimpsinal = function(object, ...) {
+  values <- summary(object)$coef
+  varImps <-  (values[-1, grep("value$", colnames(values)), drop = FALSE])
+  vimp <- data.frame(varImps)
+  colnames(vimp) <- "Overall"
+  if(!is.null(names(varImps))) rownames(vimp) <- names(varImps)
+  vimp
+}
+
+V1 = Vaimpsinal(modelo)
+
+getModelInfo("glm")$glm$varImp
+
+summary(modelo)$coef
+
+
+
+
+a = ggplot2::ggplot(V1, aes(x=reorder(rownames(V),Overall), y=Overall)) +
   geom_point( color="blue", size=4, alpha=0.6)+
   geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
                 color='skyblue') +
