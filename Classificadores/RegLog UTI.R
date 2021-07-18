@@ -257,9 +257,6 @@ test_cl1 = subset(test_cl1, select = c(-DESC_RESP, -HEMATOLOGI , -ASMA))
 
 #####Evolução
 
-#https://smolski.github.io/livroavancado/reglog.html
-#https://estatsite.com.br/2018/08/26/regressao-logistica-no-r/
-#https://www.edureka.co/blog/logistic-regression-in-r/
 
 modelo = glm(EVOL_new ~., data = train_cl1, family = binomial)
 
@@ -352,7 +349,6 @@ for (i in seq(along = cutoffs)){
 plot(cutoffs, accuracy, pch =19, type='b',col= "steelblue",
      main ="Logistic Regression", xlab="Cutoff Level", ylab = "Accuracy %")
 
-# https://www.statology.org/logistic-regression-in-r/
 
 #valor numérico
 library(InformationValue)
